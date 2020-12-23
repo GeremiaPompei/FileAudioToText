@@ -1,2 +1,2 @@
 web: python manage.py runserver
-web: gunicorn FileAudioToText.wsgi
+web: gunicorn --bing 127.0.0.1:8000 FileAudioToText.wsgi
