@@ -1,2 +1,2 @@
-web: gunicorn --bind 127.0.0.1:8000FileAudioToText:app
+web: gunicorn --bind 127.0.0.1:8000 FileAudioToText:app
 web: python manage.py runserver
