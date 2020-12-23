@@ -25,7 +25,7 @@ SECRET_KEY = 't6=^@(22tbg@q+=r)+x8l&o2zy2c@fsppi4xjjxk&3n)x@#$pz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://audio-to-txt.herokuapp.com/']
 
 
 # Application definition
