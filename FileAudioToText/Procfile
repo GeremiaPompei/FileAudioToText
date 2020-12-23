@@ -1,1 +1,1 @@
-web: gunicorn FileAudioToText.wsgi
+web: gunicorn FileAudioToText:app
