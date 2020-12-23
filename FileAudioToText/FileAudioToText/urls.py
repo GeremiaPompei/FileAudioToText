@@ -18,5 +18,5 @@ from django.urls import path
 from Converter import views
 
 urlpatterns = [
-    path('upload/', views.upload, name="upload")
+    path('/', views.upload, name="upload")
 ]
