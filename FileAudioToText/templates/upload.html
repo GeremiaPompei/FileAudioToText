@@ -4,13 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FileAudioToText</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-color: rgb(197, 154, 12);
+        }
+        button {
+            padding: 8px;
+        }
+        #container{
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
+        .el{
+            margin: 1rem 0;
+            justify-self: center;
+            align-self: center;
+        }
+        #container-txt {
+            margin: 2rem;
+            background-color: white;
+            border-radius: 25px;
+        }
+        #txt {
+            margin: 1rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="document">
-        <button type="submit">Upload</button>
-    </form>
-    <a href={{codedtxt}} download>{{download}}</a>
-    {{txt}}
+    <div id="container">
+        <h1 class="el">SBOBINATOR</h1>
+        <form class="el" method="POST" enctype="multipart/form-data">
+            <input type="file" name="document">
+            <button type="submit">
+                <h3>
+                    UPLOAD
+                </h3>
+            </button>
+        </form>
+        {% if txt %}
+        <a class="el" href={{codedtxt}} download="transcription">
+            <button>
+                <h3>
+                    DOWNLOAD
+                </h3>
+            </button>
+        </a>
+        <div class="el" id=container-txt>
+            <p id="txt">{{txt}}</p>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
