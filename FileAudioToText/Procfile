@@ -1,1 +1,1 @@
-web: gunicorn FileAudioToText.wsgi --timeout 1200
+web: gunicorn FileAudioToText.wsgi --timeout 1200 --keep-alive 600 --log-level debug
