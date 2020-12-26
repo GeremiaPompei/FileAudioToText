@@ -1,20 +1,36 @@
-Vue.createApp({
-    data: function() {
+const app = Vue.createApp({
+    data() {
         return {
-            txt: 'testoo',
-            file: undefined
+            txt: '',
+            file: undefined,
+            loading: false
         }
     },
-    method: {
+    methods: {
         submit() {
-            fetch('/api/upload', {method: 'POST',headers: {"Content-Type": "multipart/form-data"
-              }, body: this.file})
-            .then(res=>res.text())
-            .then(val=>console.log(val));
+            if(this.file){
+                this.loading = true;
+                var data = new FormData();
+                data.append('document', this.file);
+                fetch('/api/upload', {method: 'POST',body: data})
+                .then(res=>res.json())
+                .catch(e => {
+                    this.txt = 'Error!';
+                    this.loading = false;
+                })
+                .then(val=>{
+                    this.txt = val.text;
+                    this.loading = false;
+                });
+            }
         },
-        processFile(event) {
-            this.file = event.target.files[0];
-            console.log(this.file);
+        processFile() {
+            this.file = this.$refs.myFiles.files[0];
+        }
+    },
+    computed: {
+        uriTxt() {
+            return encodeURIComponent(this.txt);
         }
     }
-}).mount('#app');
+});

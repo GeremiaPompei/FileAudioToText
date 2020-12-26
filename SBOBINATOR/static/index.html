@@ -12,7 +12,6 @@
     <link rel="icon" href="icon512.png" sizes="512x512"/>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <link rel="manifest" href="sw.js"></script>
     <script>
         if('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js');
@@ -23,26 +22,28 @@
     <div id='app'>
         <div id="container">
             <h1 class="el">SBOBINATOR</h1>
-            <form class="el" method="POST" enctype="multipart/form-data" @onsubmit="submit()">
-                <input type="file" id="file" ref="myFiles" class="custom-file-input" @change="previewFiles" multiple>
+            <form class="el" @submit.prevent="submit()">
+                <input type="file" ref="myFiles" @change="processFile">
                 <button type="submit">
-                    <h3>
-                        UPLOAD
-                    </h3>
+                    <h3>UPLOAD</h3>
                 </button>
             </form>
-            <a class="el" href='data:text/plain;charset=utf-8,' download="transcription">
+            <div v-show="loading" class="el loader"></div>
+            <a v-show="txt" class="el" :href="'data:text/plain;charset=utf-8,'+uriTxt" download="transcription">
                 <button>
                     <h3>
                         DOWNLOAD
                     </h3>
                 </button>
             </a>
-            <div class="el" id=container-txt>
+            <div v-show="txt" class="el" id=container-txt>
                 <p id="txt">{{txt}}</p>
             </div>
         </div>
     </div>
     <script src=main.js></script>
+    <script> 
+        var appMounted = app.mount('#app'); 
+    </script>
 </body>
 </html>

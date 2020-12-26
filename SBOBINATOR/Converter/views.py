@@ -1,11 +1,12 @@
-from django.shortcuts import render
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, Http404
 from django.utils.encoding import filepath_to_uri
+from django.shortcuts import redirect
+from rest_framework.response import Response
 import speech_recognition as sr
 import moviepy.editor as mp
+from django.http import HttpResponse
 import os
-from django.shortcuts import redirect
+import json
 
 def redirect_view(request):
     return redirect('/static/index.html')
@@ -13,12 +14,12 @@ def redirect_view(request):
 # Create your views here.
 def upload(request):
     if request.method == 'POST':
+        response_data = {}
+        d = 'media'
         fs = FileSystemStorage()
         try:
-            if not os._exists('media'):
-                os.mkdir('media')
             uploaded_file = request.FILES['document']
-            path = 'media/'+uploaded_file.name
+            path = os.path.join(d, uploaded_file.name)
             fs.save(path, uploaded_file)
             video = mp.VideoFileClip(path)
             path = path+'.wav'
@@ -26,10 +27,13 @@ def upload(request):
             fs.delete(path.replace('.wav',''))
             text = conversion(path)
             fs.delete(path)
-            return render(request, text)
+            response_data['text'] = text
         except Exception as e:
-            for f in os.listdir('media'):
-                os.remove('media/'+f)
+            if os._exists(d):
+                for f in os.listdir(d):
+                    os.remove(os.path.join(d,f))
+            response_data['text'] = 'error'
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def conversion(sound):
 	r = sr.Recognizer()
