@@ -5,10 +5,13 @@ from django.utils.encoding import filepath_to_uri
 import speech_recognition as sr
 import moviepy.editor as mp
 import os
+from django.shortcuts import redirect
+
+def redirect_view(request):
+    return redirect('/static/index.html')
 
 # Create your views here.
 def upload(request):
-    print('ok')
     if request.method == 'POST':
         fs = FileSystemStorage()
         try:

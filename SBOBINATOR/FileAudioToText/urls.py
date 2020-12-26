@@ -20,5 +20,6 @@ from django.conf.urls.static import static
 from Converter import views
 
 urlpatterns = [
+    path('', views.redirect_view),
     path('api/upload', views.upload, name="upload")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
