@@ -1,7 +1,6 @@
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import filepath_to_uri
 from django.shortcuts import redirect
-from rest_framework.response import Response
 import speech_recognition as sr
 import moviepy.editor as mp
 from django.http import HttpResponse
