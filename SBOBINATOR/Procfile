@@ -1,0 +1,1 @@
+web: gunicorn FileAudioToText.wsgi --timeout 1200

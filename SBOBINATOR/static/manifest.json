@@ -1,0 +1,21 @@
+{
+    "short_name": "SBOBINATOR",
+    "name": "SBOBINATOR",
+    "icons": [{
+        "src": "/static/icon192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }, {
+        "src": "/static/icon512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }],
+    "orientation": "portrait",
+    "start_url": "/static/index.html",
+    "background_color": "#000000",
+    "display": "standalone",
+    "prefer_related_applications": true,
+    "theme_color": "#777777"
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBOBINATOR</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    <meta name="theme-color" content="#777777"/>
+    <link rel="icons" type="image/png" sizes="192x192"  href="icon192.png">
+    <link rel="apple-touch-icon" href="icon192.png">
+    <link rel="icon" href="icon192.png" sizes="192x192"/>
+    <link rel="icon" href="icon512.png" sizes="512x512"/>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="sw.js"></script>
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</head>
+<body>
+    <div id='app'>
+        <div id="container">
+            <h1 class="el">SBOBINATOR</h1>
+            <form class="el" method="POST" enctype="multipart/form-data" @onsubmit="submit()">
+                <input type="file" id="file" ref="myFiles" class="custom-file-input" @change="previewFiles" multiple>
+                <button type="submit">
+                    <h3>
+                        UPLOAD
+                    </h3>
+                </button>
+            </form>
+            <a class="el" href='data:text/plain;charset=utf-8,' download="transcription">
+                <button>
+                    <h3>
+                        DOWNLOAD
+                    </h3>
+                </button>
+            </a>
+            <div class="el" id=container-txt>
+                <p id="txt">{{txt}}</p>
+            </div>
+        </div>
+    </div>
+    <script src=main.js></script>
+</body>
+</html>
