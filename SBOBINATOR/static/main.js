@@ -12,15 +12,24 @@ const app = Vue.createApp({
                 this.loading = true;
                 var data = new FormData();
                 data.append('document', this.file);
-                fetch('/api/upload', {method: 'POST',body: data})
-                .then(res=>res.json())
+                fetch('/api/video-to-audio', {method: 'POST',body: data})
+                .then(res=>res.blob())
                 .catch(e => {
                     this.txt = 'Error!';
                     this.loading = false;
-                })
-                .then(val=>{
-                    this.txt = val.text;
-                    this.loading = false;
+                }).then(f => {
+                    var data2 = new FormData();
+                    data2.append('document', f);
+                    fetch('/api/audio-to-text', {method: 'POST',body: data2})
+                    .then(res=>res.json())
+                    .catch(e => {
+                        this.txt = 'Error!';
+                        this.loading = false;
+                    })
+                    .then(val=>{
+                        this.txt = val.text;
+                        this.loading = false;
+                    });
                 });
             }
         },

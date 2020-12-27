@@ -21,5 +21,6 @@ from Converter import views
 
 urlpatterns = [
     path('', views.redirect_view),
-    path('api/upload', views.upload, name="upload")
+    path('api/video-to-audio', views.videoToAudio, name="video-to-audio"),
+    path('api/audio-to-text', views.audioToText, name="audio-to-text")
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
