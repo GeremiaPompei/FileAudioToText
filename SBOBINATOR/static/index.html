@@ -28,8 +28,8 @@
                     <h3>UPLOAD</h3>
                 </button>
             </form>
-            <h4 v-show="loading" class="el">{{loadingMex}}</h4>
-            <div v-show="loading" class="el loader"></div>
+            <i v-show="loadingMex" class="el">{{loadingMex}}</i>
+            <div v-show="loadingMex" class="el loader"></div>
             <a v-show="txt" class="el" :href="'data:text/plain;charset=utf-8,'+uriTxt" download="transcription">
                 <button>
                     <h3>

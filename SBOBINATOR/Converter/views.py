@@ -27,10 +27,10 @@ def videoToAudio(request):
             os.remove(path)
             return response
         except Exception as e:
-            if os._exists(d):
+            if fs.exists(d):
                 for f in os.listdir(d):
-                    os.remove(os.path.join(d,f))
-            return 'error'
+                    fs.delete(os.path.join(d,f))
+            return 'Error!'
 
 def audioToText(request):
     if request.method == 'POST':
@@ -45,10 +45,10 @@ def audioToText(request):
             fs.delete(path)
             response_data['text'] = text
         except Exception as e:
-            if os._exists(d):
+            if fs.exists(d):
                 for f in os.listdir(d):
-                    os.remove(os.path.join(d,f))
-            response_data['text'] = 'error'
+                    fs.delete(os.path.join(d,f))
+            response_data['text'] = 'Error!'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def conversion(sound):
