@@ -2,33 +2,34 @@ const app = Vue.createApp({
     data() {
         return {
             txt: '',
+            loadingMex: '',
             file: undefined,
-            loading: false
         }
     },
     methods: {
         submit() {
             if(this.file){
-                this.loading = true;
+                this.loadingMex = 'Video to Audio conversion...';
                 var data = new FormData();
                 data.append('document', this.file);
                 fetch('/api/video-to-audio', {method: 'POST',body: data})
                 .then(res=>res.blob())
                 .catch(e => {
                     this.txt = 'Error!';
-                    this.loading = false;
+                    this.loadingMex = '';
                 }).then(f => {
+                    this.loadingMex = 'Audio to Text conversion...';
                     var data2 = new FormData();
                     data2.append('document', f);
                     fetch('/api/audio-to-text', {method: 'POST',body: data2})
                     .then(res=>res.json())
                     .catch(e => {
                         this.txt = 'Error!';
-                        this.loading = false;
+                        this.loadingMex = '';
                     })
                     .then(val=>{
                         this.txt = val.text;
-                        this.loading = false;
+                        this.loadingMex = '';
                     });
                 });
             }
@@ -40,6 +41,9 @@ const app = Vue.createApp({
     computed: {
         uriTxt() {
             return encodeURIComponent(this.txt);
+        },
+        loaing() {
+            return this.loadingMex.isEmpty;
         }
     }
 });
