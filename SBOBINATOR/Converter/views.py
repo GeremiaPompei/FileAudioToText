@@ -11,16 +11,31 @@ import json
 def redirect_view(request):
     return redirect('/static/index.html')
 
-def splitVideo(request):
+def uploadVideo(request):
+    if request.method == 'POST':
+        response_data = {}
+        d = 'media'
+        fs = FileSystemStorage()
+        uploaded_file = request.FILES['document']
+        path = os.path.join(d, uploaded_file.name)
+        path = fs.save(path, uploaded_file)
+        response_data['name'] = path
+        return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+def removeVideo(request):
     if request.method == 'POST':
         d = 'media'
         fs = FileSystemStorage()
+        uploaded_file = request.POST['name']
+        fs.delete(os.path.join(d,uploaded_file))
+        return 'Success!'
+
+def splitVideo(request):
+    if request.method == 'POST':
         summ = 40
         try:
-            uploaded_file = request.FILES['document']
+            path = request.POST['name']
             index = int(request.POST['index'])
-            path = os.path.join(d, uploaded_file.name)
-            fs.save(path, uploaded_file)
             video = mp.VideoFileClip(path)
             duration = int(video.duration)
             if index > duration+summ:
@@ -38,11 +53,10 @@ def splitVideo(request):
 
 def videoToAudio(request):
     if request.method == 'POST':
-        d = 'media'
         fs = FileSystemStorage()
         try:
             uploaded_file = request.FILES['document']
-            path = os.path.join(d, uploaded_file.name)
+            path = uploaded_file.name
             fs.save(path, uploaded_file)
             video = mp.VideoFileClip(path)
             path = path+'.wav'
@@ -52,9 +66,6 @@ def videoToAudio(request):
             os.remove(path)
             return response
         except Exception as e:
-            if fs.exists(d):
-                for f in os.listdir(d):
-                    fs.delete(os.path.join(d,f))
             return 'Error!'
 
 def audioToText(request):

@@ -21,6 +21,8 @@ from Converter import views
 
 urlpatterns = [
     path('', views.redirect_view),
+    path('api/upload-video', views.uploadVideo, name="upload-video"),
+    path('api/remove-video', views.removeVideo, name="remove-video"),
     path('api/split-video', views.splitVideo, name="split-video"),
     path('api/video-to-audio', views.videoToAudio, name="video-to-audio"),
     path('api/audio-to-text', views.audioToText, name="audio-to-text")

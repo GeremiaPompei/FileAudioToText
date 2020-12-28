@@ -12,13 +12,18 @@ const app = Vue.createApp({
             if(this.file) {
                 var index = sum;
                 this.txt = '';
+                this.loadingMex = 'Uploading video...';
+                var data = new FormData();
+                data.append('document', this.file);
+                var res = await fetch('/api/upload-video', {method: 'POST',body: data});
+                var name = (await res.json()).name;
                 while(true) {
                     try {
                         this.loadingMex = 'Splitting video ['+index+']...';
-                        var data = new FormData();
-                        data.append('document', this.file);
-                        data.append('index',index.toString());
-                        var res = await fetch('/api/split-video', {method: 'POST',body: data});
+                        var data0 = new FormData();
+                        data0.append('name', name);
+                        data0.append('index',index.toString());
+                        var res = await fetch('/api/split-video', {method: 'POST',body: data0});
                         var val = await res.blob();
                         index+=sum;
                         this.loadingMex = 'Video to audio conversion...';
@@ -42,6 +47,10 @@ const app = Vue.createApp({
                         this.txt = '';
                         this.loadingMex = '';
                         break;
+                    }finally{
+                        var data4 = new FormData();
+                        data4.append('name', name);
+                        fetch('/api/remove-video', {method: 'POST',body: data4});
                     }
                 }
             }
