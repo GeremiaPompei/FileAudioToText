@@ -44,7 +44,8 @@ def splitVideo(request):
                 clip=video.subclip(index-summ,index)
             else:
                 clip=video.subclip(index-summ,duration)
-            clip.write_videofile(path)
+            path='media/tmp_'+path.replace('media/','')
+            clip.write_videofile(path,fps=25)
             response = FileResponse(open(path, 'rb'))
             os.remove(path)
             return response
@@ -54,9 +55,10 @@ def splitVideo(request):
 def videoToAudio(request):
     if request.method == 'POST':
         fs = FileSystemStorage()
+        d = 'media'
         try:
             uploaded_file = request.FILES['document']
-            path = uploaded_file.name
+            path = os.path.join(d, uploaded_file.name)
             fs.save(path, uploaded_file)
             video = mp.VideoFileClip(path)
             path = path+'.wav'

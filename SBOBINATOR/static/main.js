@@ -40,7 +40,7 @@ const app = Vue.createApp({
                             this.loadingMex = '';
                             break;
                         }
-                        this.txt += val3.text;
+                        this.txt += val3.text + ' ';
                         this.loadingMex = '';
                     }catch(e) {
                         console.log(e);
