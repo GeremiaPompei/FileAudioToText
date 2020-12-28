@@ -15,6 +15,7 @@ def splitVideo(request):
     if request.method == 'POST':
         d = 'media'
         fs = FileSystemStorage()
+        summ = 40
         try:
             uploaded_file = request.FILES['document']
             index = int(request.POST['index'])
@@ -22,12 +23,12 @@ def splitVideo(request):
             fs.save(path, uploaded_file)
             video = mp.VideoFileClip(path)
             duration = int(video.duration)
-            if index > duration+60:
+            if index > duration+summ:
                 return 'Error!'
             if index <= duration:
-                clip=video.subclip(index-60,index)
+                clip=video.subclip(index-summ,index)
             else:
-                clip=video.subclip(index-60,duration)
+                clip=video.subclip(index-summ,duration)
             clip.write_videofile(path)
             response = FileResponse(open(path, 'rb'))
             os.remove(path)

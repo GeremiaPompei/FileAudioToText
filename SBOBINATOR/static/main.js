@@ -8,8 +8,10 @@ const app = Vue.createApp({
     },
     methods: {
         async submit() {
+            const sum = 40;
             if(this.file) {
-                var index = 60;
+                var index = sum;
+                this.text = '';
                 while(true) {
                     try {
                         this.loadingMex = 'Splitting video ['+index+']...';
@@ -18,7 +20,7 @@ const app = Vue.createApp({
                         data.append('index',index.toString());
                         var res = await fetch('/api/split-video', {method: 'POST',body: data});
                         var val = await res.blob();
-                        index+=60;
+                        index+=sum;
                         this.loadingMex = 'Video to audio conversion...';
                         var data1 = new FormData();
                         data1.append('document', val);
