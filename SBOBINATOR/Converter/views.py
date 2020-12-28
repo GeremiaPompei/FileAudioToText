@@ -45,7 +45,7 @@ def splitVideo(request):
             else:
                 clip=video.subclip(index-summ,duration)
             path='media/tmp_'+path.replace('media/','')
-            clip.write_videofile(path,fps=25)
+            clip.write_videofile(path,fps=1)
             response = FileResponse(open(path, 'rb'))
             os.remove(path)
             return response
