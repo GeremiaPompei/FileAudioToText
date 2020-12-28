@@ -11,6 +11,30 @@ import json
 def redirect_view(request):
     return redirect('/static/index.html')
 
+def splitVideo(request):
+    if request.method == 'POST':
+        d = 'media'
+        fs = FileSystemStorage()
+        try:
+            uploaded_file = request.FILES['document']
+            index = int(request.POST['index'])
+            path = os.path.join(d, uploaded_file.name)
+            fs.save(path, uploaded_file)
+            video = mp.VideoFileClip(path)
+            duration = int(video.duration)
+            if index > duration+60:
+                return 'Error!'
+            if index <= duration:
+                clip=video.subclip(index-60,index)
+            else:
+                clip=video.subclip(index-60,duration)
+            clip.write_videofile(path)
+            response = FileResponse(open(path, 'rb'))
+            os.remove(path)
+            return response
+        except Exception as e:
+            return 'Error!'
+
 def videoToAudio(request):
     if request.method == 'POST':
         d = 'media'
