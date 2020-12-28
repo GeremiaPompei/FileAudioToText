@@ -11,7 +11,7 @@ const app = Vue.createApp({
             const sum = 40;
             if(this.file) {
                 var index = sum;
-                this.text = '';
+                this.txt = '';
                 while(true) {
                     try {
                         this.loadingMex = 'Splitting video ['+index+']...';
