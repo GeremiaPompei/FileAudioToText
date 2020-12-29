@@ -29,7 +29,10 @@
                 </button>
             </form>
             <i v-show="loadingMex" class="el">{{loadingMex}}</i>
-            <div v-show="loadingMex" class="el loader"></div>
+            <h3 v-show="loadingMex" class='el'>{{loadingIndex+'%'}}</h3>
+            <div v-show="loadingMex" class="el" id="myProgress">
+                <div id="myBar"></div>
+            </div>
             <a v-show="txt" class="el" :href="'data:text/plain;charset=utf-8,'+uriTxt" download="transcription">
                 <button>
                     <h3>

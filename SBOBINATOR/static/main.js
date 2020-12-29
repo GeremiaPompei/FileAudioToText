@@ -3,13 +3,20 @@ const app = Vue.createApp({
         return {
             text: [''],
             loadingMex: '',
-            file: undefined,
+            loadingIndex: 0,
+            file: undefined
         }
     },
     methods: {
+        load(i) {
+            var elem = document.getElementById("myBar");
+            elem.style.width = i + "%";
+            this.loadingIndex = i;
+        },
         async submit() {
             if(this.file && this.file.type.includes('video')) {
                 try {
+                    this.load(0);
                     var sum = 30;
                     this.text = [''];
                     this.loadingMex = 'Uploading video...';
@@ -20,6 +27,7 @@ const app = Vue.createApp({
                     var name = json.name;
                     var duration = json.duration;
                     for(var index=0; index<duration; index+=sum) {
+                        this.load(parseInt(index/duration*100));
                         var load = '[ '+index+' / '+duration+' seconds ]...';
                         this.loadingMex = 'Splitting video '+load;
                         var data0 = new FormData();
@@ -40,6 +48,7 @@ const app = Vue.createApp({
                         this.text[index/sum] = val3.text;
                         this.loadingMex = '';
                     }
+                    this.load(100);
                 }catch(e) {
                     this.text.push('Operation failed: ['+e.toString()+']');
                     this.loadingMex = '';
