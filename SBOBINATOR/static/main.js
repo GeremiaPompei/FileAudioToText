@@ -10,7 +10,7 @@ const app = Vue.createApp({
         async submit() {
             if(this.file && this.file.type.includes('video')) {
                 try {
-                    var sum = 40;
+                    var sum = 30;
                     this.text = [''];
                     this.loadingMex = 'Uploading video...';
                     var data = new FormData();
@@ -41,7 +41,7 @@ const app = Vue.createApp({
                         this.loadingMex = '';
                     }
                 }catch(e) {
-                    this.text.push('\nOperation failed!\n'+e.toString());
+                    this.text.push('Operation failed: ['+e.toString()+']');
                     this.loadingMex = '';
                 }
                 var data4 = new FormData();

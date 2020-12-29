@@ -37,7 +37,7 @@ def removeVideo(request):
 
 def splitVideo(request):
     if request.method == 'POST':
-        summ = 40
+        summ = 30
         pathv = ''
         pathc = ''
         try:
