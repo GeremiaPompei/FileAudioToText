@@ -17,57 +17,74 @@ def uploadVideo(request):
         d = 'media'
         fs = FileSystemStorage()
         uploaded_file = request.FILES['document']
-        path = os.path.join(d, uploaded_file.name)
-        path = fs.save(path, uploaded_file)
-        response_data['name'] = path
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+        path = ''
+        try:
+            path = os.path.join(d, uploaded_file.name)
+            path = fs.save(path, uploaded_file)
+            response_data['name'] = path
+            response_data['duration'] = int(mp.VideoFileClip(path).duration)
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+        except Exception as e:
+            if(os._exists(path)):
+                os.remove(path)
+            return 'Error!'
 
 def removeVideo(request):
     if request.method == 'POST':
-        d = 'media'
-        fs = FileSystemStorage()
-        uploaded_file = request.POST['name']
-        fs.delete(os.path.join(d,uploaded_file))
+        path = str(request.POST['name'])
+        os.remove(path)
         return 'Success!'
 
 def splitVideo(request):
     if request.method == 'POST':
         summ = 40
+        pathv = ''
+        pathc = ''
         try:
-            path = request.POST['name']
+            pathv = request.POST['name']
             index = int(request.POST['index'])
-            video = mp.VideoFileClip(path)
+            video = mp.VideoFileClip(pathv)
             duration = int(video.duration)
-            if index > duration+summ:
+            if index > duration:
                 return 'Error!'
-            if index <= duration:
-                clip=video.subclip(index-summ,index)
+            if index+summ <= duration:
+                clip=video.subclip(index,index+summ)
             else:
-                clip=video.subclip(index-summ,duration)
-            path='media/tmp_'+path.replace('media/','')
-            clip.write_videofile(path,fps=1)
-            response = FileResponse(open(path, 'rb'))
-            os.remove(path)
+                clip=video.subclip(index,duration)
+            pathc='media/tmp_'+pathv.replace('media/','')
+            clip.write_videofile(pathc,fps=1)
+            response = FileResponse(open(pathc, 'rb'))
+            os.remove(pathc)
             return response
         except Exception as e:
+            if(os._exists(pathc)):
+                os.remove(pathc)
+            if(os._exists(pathv)):
+                os.remove(pathv)
             return 'Error!'
 
 def videoToAudio(request):
     if request.method == 'POST':
         fs = FileSystemStorage()
         d = 'media'
+        pathv = ''
+        patha = ''
         try:
             uploaded_file = request.FILES['document']
-            path = os.path.join(d, uploaded_file.name)
-            fs.save(path, uploaded_file)
-            video = mp.VideoFileClip(path)
-            path = path+'.wav'
-            video.audio.write_audiofile(path)
-            fs.delete(path.replace('.wav',''))
-            response = FileResponse(open(path, 'rb'))
-            os.remove(path)
+            pathv = os.path.join(d, uploaded_file.name)
+            fs.save(pathv, uploaded_file)
+            video = mp.VideoFileClip(pathv)
+            patha = pathv+'.wav'
+            video.audio.write_audiofile(patha)
+            fs.delete(pathv)
+            response = FileResponse(open(patha, 'rb'))
+            os.remove(patha)
             return response
         except Exception as e:
+            if(os._exists(pathv)):
+                os.remove(pathv)
+            if(os._exists(patha)):
+                os.remove(patha)
             return 'Error!'
 
 def audioToText(request):
@@ -75,6 +92,7 @@ def audioToText(request):
         response_data = {}
         d = 'media'
         fs = FileSystemStorage()
+        path = ''
         try:
             uploaded_file = request.FILES['document']
             path = os.path.join(d, uploaded_file.name)
@@ -83,9 +101,8 @@ def audioToText(request):
             fs.delete(path)
             response_data['text'] = text
         except Exception as e:
-            if fs.exists(d):
-                for f in os.listdir(d):
-                    fs.delete(os.path.join(d,f))
+            if(os._exists(path)):
+                os.remove(path)
             response_data['text'] = 'Error!'
         return HttpResponse(json.dumps(response_data), content_type="application/json")
 
