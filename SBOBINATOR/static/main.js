@@ -8,18 +8,18 @@ const app = Vue.createApp({
     },
     methods: {
         async submit() {
-            const sum = 40;
             if(this.file && this.file.type.includes('video')) {
-                this.text = [''];
-                this.loadingMex = 'Uploading video...';
-                var data = new FormData();
-                data.append('document', this.file);
-                var res = await fetch('/api/upload-video', {method: 'POST',body: data});
-                var json = await res.json();
-                var name = json.name;
-                var duration = json.duration;
-                for(var index=0; index<duration; index+=sum) {
-                    try {
+                try {
+                    var sum = 40;
+                    this.text = [''];
+                    this.loadingMex = 'Uploading video...';
+                    var data = new FormData();
+                    data.append('document', this.file);
+                    var res = await fetch('/api/upload-video', {method: 'POST',body: data});
+                    var json = await res.json();
+                    var name = json.name;
+                    var duration = json.duration;
+                    for(var index=0; index<duration; index+=sum) {
                         var load = '[ '+index+' / '+duration+' seconds ]...';
                         this.loadingMex = 'Splitting video '+load;
                         var data0 = new FormData();
@@ -39,12 +39,10 @@ const app = Vue.createApp({
                         var val3 = await res3.json();
                         this.text[index/sum] = val3.text;
                         this.loadingMex = '';
-                    }catch(e) {
-                        console.log(e);
-                        this.text = [''];
-                        this.loadingMex = '';
-                        break;
                     }
+                }catch(e) {
+                    this.text.push('\nOperation failed!\n'+e.toString());
+                    this.loadingMex = '';
                 }
                 var data4 = new FormData();
                 data4.append('name', name.toString());

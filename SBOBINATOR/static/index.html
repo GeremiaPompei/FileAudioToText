@@ -24,7 +24,7 @@
             <h1 class="el">SBOBINATOR</h1>
             <form class="el" @submit.prevent="submit()">
                 <input type="file" ref="myFiles" @change="processFile">
-                <button type="submit">
+                <button v-show="!loadingMex" type="submit">
                     <h3>UPLOAD</h3>
                 </button>
             </form>
