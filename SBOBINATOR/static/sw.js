@@ -2,14 +2,14 @@ self.addEventListener('install', function(event) {
     event.waitUntil(
         caches.open('offline-media').then(function(cache) {
             return cache.addAll([
-                'https://unpkg.com/vue@next',
+                /*'https://unpkg.com/vue@next',
                 '/static/index.html',
                 '/static/manifest.json',
                 '/static/style.css',
                 '/static/sw.js',
                 '/static/main.js',
                 '/static/icon192.png',
-                '/static/icon512.png'
+                '/static/icon512.png'*/
             ]);
         })
     );
