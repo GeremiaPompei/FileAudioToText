@@ -11,9 +11,10 @@ button {
     text-decoration: none;
     display: inline-block;
     padding: 1rem;
+    background-color: #dddddd;
 }
 #container{
-    margin: 2rem;
+    margin: 2rem 0;
     display: grid;
     justify-content: center;
     align-items: center;
