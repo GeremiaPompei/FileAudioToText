@@ -81,6 +81,7 @@ def videoToAudio(request):
             os.remove(patha)
             return response
         except Exception as e:
+            print('---------->CIAOOOOOO')
             if(os._exists(pathv)):
                 os.remove(pathv)
             if(os._exists(patha)):
@@ -100,11 +101,12 @@ def audioToText(request):
             text = conversion(path)
             fs.delete(path)
             response_data['text'] = text
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
         except Exception as e:
             if(os._exists(path)):
                 os.remove(path)
-            response_data['text'] = 'Error!'
-        return HttpResponse(json.dumps(response_data), content_type="application/json")
+            response_data['text'] = ''
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 def conversion(sound):
 	r = sr.Recognizer()

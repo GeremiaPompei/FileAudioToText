@@ -16,7 +16,6 @@ const app = Vue.createApp({
         async submit() {
             if(this.file && this.file.type.includes('video')) {
                 try {
-                    setTimeout(function(){},3000); // Timer 3 sec
                     this.load(0);
                     var sum = 30;
                     this.text = [''];
