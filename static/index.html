@@ -23,8 +23,12 @@
         <div id="container">
             <h1 class="el">SBOBINATOR</h1>
             <form class="el" @submit.prevent="submit()">
-                <input type="file" ref="myFiles" @change="processFile">
-                <button v-show="!loadingMex" type="submit">
+                <input type="file" ref="myFiles" @change="processFile" style ="cursor: pointer" required>
+                <select name="language" v-model="language" required style="margin-right: 4rem;cursor: pointer;">
+                    <option value="it-IT">Italian</option>
+                    <option value="en-US">English</option>
+                </select>
+                <button v-show="!loadingMex" type="submit" style="cursor: pointer;">
                     <h3>UPLOAD</h3>
                 </button>
             </form>
@@ -34,7 +38,7 @@
                 <div id="myBar"></div>
             </div>
             <a v-show="txt" class="el" :href="'data:text/plain;charset=utf-8,'+uriTxt" download="transcription">
-                <button>
+                <button style="cursor: pointer;">
                     <h3>
                         DOWNLOAD
                     </h3>

@@ -95,9 +95,10 @@ def audioToText(request):
         path = ''
         try:
             uploaded_file = request.FILES['document']
+            language = request.POST['language']
             path = os.path.join(d, uploaded_file.name)
             fs.save(path, uploaded_file)
-            text = conversion(path)
+            text = conversion(path, language)
             fs.delete(path)
             response_data['text'] = text
             return HttpResponse(json.dumps(response_data), content_type="application/json")
@@ -107,14 +108,14 @@ def audioToText(request):
             response_data['text'] = ''
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
-def conversion(sound):
+def conversion(sound, language):
 	r = sr.Recognizer()
 	with sr.AudioFile(sound) as source:
 		r.adjust_for_ambient_noise(source)
 		r.pause_threshold = 1800.0
 		audio = r.listen(source)
 		try:
-			return r.recognize_google(audio, language="it-IT")
+			return r.recognize_google(audio, language=language)
 		except Exception as e:
 			return e
 

@@ -4,7 +4,8 @@ const app = Vue.createApp({
             text: [''],
             loadingMex: '',
             loadingIndex: 0,
-            file: undefined
+            file: undefined,
+            language: 'it-IT'
         }
     },
     methods: {
@@ -43,6 +44,7 @@ const app = Vue.createApp({
                         this.loadingMex = 'Audio to text conversion '+load;
                         var data2 = new FormData();
                         data2.append('document', f);
+                        data2.append('language', this.language);
                         var res3 = await fetch('/api/audio-to-text', {method: 'POST',body: data2});
                         var val3 = await res3.json();
                         this.text[index/sum] = val3.text;
