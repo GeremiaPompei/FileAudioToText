@@ -1,1 +1,1 @@
-python setup.py py2app --packages "py2app,tk,moviepy,pydub,speech_recognition"
+python setup_mac.py py2app --packages "py2app,tk,moviepy,pydub,speech_recognition"

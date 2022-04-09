@@ -1,2 +1,4 @@
-local/.venv
+local/.*
 local/__pycache__
+local/build
+local/dist

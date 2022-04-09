@@ -1,6 +1,10 @@
 import speech_recognition as sr
 import moviepy.editor as mp
 from pydub import AudioSegment
+import math
+import os
+from datetime import datetime
+
 
 def is_video_file(filename):
     video_file_extensions = (
@@ -27,32 +31,61 @@ def is_video_file(filename):
         '.scc', '.scm', '.scm', '.scn', '.screenflow', '.sec', '.sedprj', '.seq', '.sfd', '.sfvidcap', '.siv', '.smi', '.smi',
         '.smil', '.smk', '.sml', '.smv', '.spl', '.sqz', '.srt', '.ssf', '.ssm', '.stl', '.str', '.stx', '.svi', '.swf', '.swi',
         '.swt', '.tda3mt', '.tdx', '.thp', '.tivo', '.tix', '.tod', '.tp', '.tp0', '.tpd', '.tpr', '.trp', '.ts', '.tsp', '.ttxt',
-        '.tvs', '.usf', '.usm', '.vc1', '.vcpf', '.vcr', '.vcv', '.vdo', '.vdr', '.vdx', '.veg','.vem', '.vep', '.vf', '.vft',
+        '.tvs', '.usf', '.usm', '.vc1', '.vcpf', '.vcr', '.vcv', '.vdo', '.vdr', '.vdx', '.veg', '.vem', '.vep', '.vf', '.vft',
         '.vfw', '.vfz', '.vgz', '.vid', '.video', '.viewlet', '.viv', '.vivo', '.vlab', '.vob', '.vp3', '.vp6', '.vp7', '.vpj',
         '.vro', '.vs4', '.vse', '.vsp', '.w32', '.wcp', '.webm', '.wlmp', '.wm', '.wmd', '.wmmp', '.wmv', '.wmx', '.wot', '.wp3',
         '.wpl', '.wtv', '.wve', '.wvx', '.xej', '.xel', '.xesc', '.xfl', '.xlmv', '.xmv', '.xvid', '.y4m', '.yog', '.yuv', '.zeg',
-        '.zm1', '.zm2', '.zm3', '.zmv'  )
+        '.zm1', '.zm2', '.zm3', '.zmv')
     if filename.endswith((video_file_extensions)):
         return True
 
-def video_to_audio(path):
+def random_name():
+    return datetime.utcnow().strftime('%Y%m%d%H%M%S%f')
+
+def video_to_audio(dir, filename):
+    path = filename
     if is_video_file(path):
         video = mp.VideoFileClip(path)
-        path = path+'.wav'
+        path = dir + random_name() + '.wav'
         video.audio.write_audiofile(path)
     if path.endswith('.mp3') or path.endswith('.MP3'):
         sound = AudioSegment.from_mp3(path)
-        path = path+'.wav'
+        path = dir + random_name() +'.wav'
         sound.export(path, format="wav")
     return path
 
-def conversion(sound, language):
-	r = sr.Recognizer()
-	with sr.AudioFile(sound) as source:
-		r.adjust_for_ambient_noise(source)
-		r.pause_threshold = 1800.0
-		audio = r.listen(source)
-		try:
-			return r.recognize_google(audio, language=language)
-		except Exception as e:
-			return e
+
+def single_split(audio, from_min, to_min, split_filename):
+    t1 = from_min * 60 * 1000
+    t2 = to_min * 60 * 1000
+    split_audio = audio[t1:t2]
+    split_audio.export(split_filename, format="wav")
+    return split_filename
+
+
+def multiple_split(dir, filepath, min_per_split):
+    audio = AudioSegment.from_wav(filepath)
+    total_mins = math.ceil(audio.duration_seconds / 60)
+    paths = []
+    for i in range(0, total_mins, min_per_split):
+        split_fn = dir + random_name() + "_" + str(i) + ".wav"
+        path = single_split(audio, i, i+min_per_split, split_fn)
+        paths.append(path)
+    return paths
+
+
+def conversion(dir, filename, language, min_per_split=5):
+    r = sr.Recognizer()
+    filenames = multiple_split(dir, filename, min_per_split)
+    for filename_chunk in filenames:
+        with sr.AudioFile(filename_chunk) as source:
+            r.adjust_for_ambient_noise(source)
+            r.pause_threshold = 1800.0
+            audio = r.listen(source)
+            os.remove(filename_chunk)
+            try:
+                yield r.recognize_google(audio, language=language)
+            except Exception as e:
+                print(e.with_traceback())
+                yield ""
+            
